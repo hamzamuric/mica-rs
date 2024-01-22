@@ -1,5 +1,20 @@
 use std::mem;
 
+trait MinimaxPlayer {
+    fn into_next_player(self) -> impl MinimaxPlayer;
+    fn toggle(&mut self);
+}
+
+trait Minimax {
+    type Value;
+    type Player: MinimaxPlayer;
+    type Move;
+    fn is_end(&self) -> bool;
+    fn eval(&self) -> Self::Value;
+    fn get_moves(&self) -> Vec<Self::Move>;
+    fn minimax(&mut self, depth: u8) -> (Self::Value, Option<Self::Move>);
+}
+
 #[repr(i8)]
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum MicaPlayer {
@@ -52,21 +67,6 @@ enum MicaMove {
         remove_y: u8,
         remove_z: u8,
     }
-}
-
-trait MinimaxPlayer {
-    fn into_next_player(self) -> impl MinimaxPlayer;
-    fn toggle(&mut self);
-}
-
-trait Minimax {
-    type Value;
-    type Player: MinimaxPlayer;
-    type Move;
-    fn is_end(&self) -> bool;
-    fn eval(&self) -> Self::Value;
-    fn get_moves(&self) -> Vec<Self::Move>;
-    fn minimax(&mut self, depth: u8) -> (Self::Value, Option<Self::Move>);
 }
 
 struct MicaState {
